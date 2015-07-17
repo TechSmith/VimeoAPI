@@ -1,24 +1,20 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VimeoAPI", "VimeoAPI\VimeoAPI.csproj", "{F13DF16E-B846-4532-AB59-B26418D1F95A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Debug|x64 = Debug|x64
-		Release|Win32 = Release|Win32
-		Release|x64 = Release|x64
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|Win32.Build.0 = Debug|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|x64.Build.0 = Debug|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|Win32.ActiveCfg = Release|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|Win32.Build.0 = Release|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|x64.ActiveCfg = Release|Any CPU
-		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|x64.Build.0 = Release|Any CPU
+		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|AnyCPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
