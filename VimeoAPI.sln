@@ -14,21 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCVimeoApp", "Source\MFCVi
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://tfs-app:8080/tfs/tscprojects
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Source\\VimeoAPI\\VimeoAPI.csproj
-		SccProjectName1 = Source/VimeoAPI
-		SccLocalPath1 = Source\\VimeoAPI
-		SccProjectUniqueName2 = Source\\VimeoInterop\\VimeoInterop.vcxproj
-		SccProjectName2 = Source/VimeoInterop
-		SccLocalPath2 = Source\\VimeoInterop
-		SccProjectUniqueName3 = Source\\MFCVimeoApp\\MFCVimeoApp.vcxproj
-		SccProjectName3 = Source/MFCVimeoApp
-		SccLocalPath3 = Source\\MFCVimeoApp
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Debug|x64 = Debug|x64
