@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -38,24 +38,28 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CLRSupport>true</CLRSupport>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -107,31 +111,14 @@
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\Newtonsoft.Json.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.lib" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         
-
-         goto BuildEventOK
-
-         :BuildEventFailed
-         echo Post-Build Event for $(ProjectName) FAILED
-         exit 1
-
-         :BuildEventOK
-         echo Post-Build Event for $(ProjectName) SUCCEEDED</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>md "$(TargetDir)"
 pushd "$(TargetDir)"
-attrib -R /S</Command>
+attrib -R /S
+popd</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -148,26 +135,8 @@ attrib -R /S</Command>
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\Newtonsoft.Json.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.lib" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         
-
-         goto BuildEventOK
-
-         :BuildEventFailed
-         echo Post-Build Event for $(ProjectName) FAILED
-         exit 1
-
-         :BuildEventOK
-         echo Post-Build Event for $(ProjectName) SUCCEEDED</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
@@ -175,7 +144,8 @@ attrib -R /S</Command>
     <PreBuildEvent>
       <Command>md "$(TargetDir)"
 pushd "$(TargetDir)"
-attrib -R /S</Command>
+attrib -R /S
+popd</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -191,31 +161,14 @@ attrib -R /S</Command>
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\Newtonsoft.Json.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.lib" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         
-
-         goto BuildEventOK
-
-         :BuildEventFailed
-         echo Post-Build Event for $(ProjectName) FAILED
-         exit 1
-
-         :BuildEventOK
-         echo Post-Build Event for $(ProjectName) SUCCEEDED</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>md "$(TargetDir)"
 pushd "$(TargetDir)"
-attrib -R /S</Command>
+attrib -R /S
+popd</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,26 +184,8 @@ attrib -R /S</Command>
       </AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\Newtonsoft.Json.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.dll" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(SolutionDir)Bin\AnyCPU\$(Configuration)\VimeoAPI.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\Vimeo\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.lib" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         xcopy /D /Y /F "$(OutDir)VimeoInterop.pdb" "$(SolutionDir)Bin\$(Platform)\$(Configuration)\"
-         if errorLevel 1 goto BuildEventFailed
-         
-
-         goto BuildEventOK
-
-         :BuildEventFailed
-         echo Post-Build Event for $(ProjectName) FAILED
-         exit 1
-
-         :BuildEventOK
-         echo Post-Build Event for $(ProjectName) SUCCEEDED</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
@@ -258,15 +193,20 @@ attrib -R /S</Command>
     <PreBuildEvent>
       <Command>md "$(TargetDir)"
 pushd "$(TargetDir)"
-attrib -R /S</Command>
+attrib -R /S
+popd</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="VimeoAPI">
+      <HintPath>..\packages\VimeoAPI.1.0.0.0\lib\net40\VimeoAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Include\Vimeo\VimeoAPI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
     <ClInclude Include="VimeoInterop.h" />
@@ -289,8 +229,8 @@ attrib -R /S</Command>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VimeoAPI\VimeoAPI.csproj">
-      <Project>{f13df16e-b846-4532-ab59-b26418d1f95a}</Project>
+    <ProjectReference Include="..\NugetReferencer\NuGetReferencer.csproj">
+      <Project>{7d4c345b-1458-4641-a9a6-5e7c92e588ca}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

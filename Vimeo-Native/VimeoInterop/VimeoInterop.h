@@ -4,7 +4,7 @@
 
 using namespace System;
 
-#include "../../Include/Vimeo/VimeoAPI.h"
+#include "../Include/Vimeo/VimeoAPI.h"
 
 #define VIMEO_EXTRA_SAFE
 

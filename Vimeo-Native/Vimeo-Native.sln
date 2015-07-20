@@ -1,12 +1,16 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VimeoInterop", "VimeoInterop\VimeoInterop.vcxproj", "{85F6CD6E-1FBF-46C1-B6F0-8680FBDC3C6E}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCVimeoApp", "MFCVimeoApp\MFCVimeoApp.vcxproj", "{6B793B16-3052-44D6-853C-3E47B1605B42}"
 	ProjectSection(ProjectDependencies) = postProject
 		{85F6CD6E-1FBF-46C1-B6F0-8680FBDC3C6E} = {85F6CD6E-1FBF-46C1-B6F0-8680FBDC3C6E}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferencer", "NugetReferencer\NuGetReferencer.csproj", "{7D4C345B-1458-4641-A9A6-5E7C92E588CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +36,14 @@ Global
 		{6B793B16-3052-44D6-853C-3E47B1605B42}.Release|Win32.Build.0 = Release|Win32
 		{6B793B16-3052-44D6-853C-3E47B1605B42}.Release|x64.ActiveCfg = Release|x64
 		{6B793B16-3052-44D6-853C-3E47B1605B42}.Release|x64.Build.0 = Release|x64
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Debug|Win32.Build.0 = Debug|Win32
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Debug|x64.ActiveCfg = Debug|x64
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Debug|x64.Build.0 = Debug|x64
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Release|Win32.ActiveCfg = Release|Win32
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Release|Win32.Build.0 = Release|Win32
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Release|x64.ActiveCfg = Release|x64
+		{7D4C345B-1458-4641-A9A6-5E7C92E588CA}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

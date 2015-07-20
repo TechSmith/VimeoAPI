@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "../../Include/Vimeo/VimeoAPI.h"
+#include "../Include/Vimeo/VimeoAPI.h"
 
 // CMFCVimeoAppDlg dialog
 class CMFCVimeoAppDlg : public CDialogEx
