@@ -16,7 +16,7 @@ namespace VimeoAPI
       public string bio;
       public string created_time;
       public string account;
-      public string pictures;
+      public Pictures pictures;
       public List<string> websites;
       public PeferencesResponse preferences;
       public List<string> content_filter;
