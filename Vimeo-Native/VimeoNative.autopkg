@@ -3,7 +3,7 @@ nuget
    nuspec
    {
       id = VimeoNative;
-      version: 9.0.2.0;
+      version: 9.0.3.0;
       title: Vimeo Native Library;
       authors: { TechSmith Corporation };
       owners: { TechSmith Corporation };
