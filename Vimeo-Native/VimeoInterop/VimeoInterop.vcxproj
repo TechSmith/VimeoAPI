@@ -208,7 +208,7 @@ popd</Command>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="VimeoAPI">
-      <HintPath>..\packages\VimeoAPI.1.0.0.0\lib\net40\VimeoAPI.dll</HintPath>
+      <HintPath>..\packages\VimeoAPI.1.0.1.0\lib\net40\VimeoAPI.dll</HintPath>
       <Private>false</Private>
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
