@@ -152,21 +152,34 @@ namespace VimeoAPI
             responseStream.Close();
             response.Close();
 
-            AccessTokenResponse accessToken =
-                 Newtonsoft.Json.JsonConvert.DeserializeObject<AccessTokenResponse>(strResponse);
+            AccessTokenResponse accessToken = null;
 
-            //Check scope
-            foreach (var strScope in m_eScope.GetFlagsString())
+            try
             {
-               if (!accessToken.scope.Contains(strScope))
-                  return false;
+               accessToken = Newtonsoft.Json.JsonConvert.DeserializeObject<AccessTokenResponse>(strResponse);
+
+               //Check scope
+               foreach (var strScope in m_eScope.GetFlagsString())
+               {
+                  if (!accessToken.scope.Contains(strScope))
+                     return false;
+               }
+
+               //Save off access_token for authenticated requests
+               m_strAccessToken = accessToken.access_token;
+
+               //Save off name too :)
+               m_strUserName = accessToken.user.name;
             }
-
-            //Save off access_token for authenticated requests
-            m_strAccessToken = accessToken.access_token;
-
-            //Save off name too :)
-            m_strUserName = accessToken.user.name;
+            catch (Newtonsoft.Json.JsonReaderException ex)
+            {
+               //This sucks!  It should hopefully NEVER HAPPEN but it could potentially for some user account.
+               //You have to do something!
+               int nStart = strResponse.IndexOf("\"access_token\":\"");
+               int nEnd = strResponse.IndexOf("\",\"", nStart);
+               string strAccessToken = strResponse.Substring(nStart, nEnd - nStart);
+               m_strAccessToken = String.Join(String.Empty, strAccessToken.Split(new char[] {'\"', ','}, StringSplitOptions.RemoveEmptyEntries));
+            }
          }
          catch (WebException wex)
          {
