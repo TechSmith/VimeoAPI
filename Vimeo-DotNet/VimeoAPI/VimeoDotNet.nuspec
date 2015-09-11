@@ -10,7 +10,7 @@
     <iconUrl>http://assets.techsmith.com/Images/content/mkt-about/tsc-dl-image.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
-    <releaseNotes>Initial NuGet package</releaseNotes>
+    <releaseNotes></releaseNotes>
     <copyright>Copyright © 2014-2015 TechSmith Corporation. All rights reserved.</copyright>
     <tags>camtasia Vimeo</tags>
     <dependencies>
