@@ -1,3 +1,11 @@
+configurations
+{
+	Toolset {
+		key : "PlatformToolset";
+		choices: { v140 };
+	};
+}
+
 nuget
 {
    nuspec
@@ -15,7 +23,7 @@ nuget
       releaseNotes: "Initial Checkin";
       description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.";
       copyright: "Copyright (c) 2014-2015 TechSmith Corporation. All rights reserved.";
-      tags: { native, tsc, vimeo, utility, vs2013, cpp, dynamicmfc, mfc, dynamiccpp };
+      tags: { native, tsc, vimeo, utility, vs2015, cpp, dynamicmfc, mfc, dynamiccpp };
    };
 
    dependencies
@@ -29,7 +37,7 @@ nuget
    {
       nestedInclude:  { #destination = ${d_include}Vimeo; include\Vimeo\*.h };
 
-      ("Win32,x64", "v120", "Debug,Release") =>
+      ("Win32,x64", "v140", "Debug,Release") =>
       {
          [${0},${1},${2}]
          {
