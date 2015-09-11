@@ -20,7 +20,7 @@ nuget
       iconUrl: "http://www.techsmith.com/favicon.ico";
       requireLicenseAcceptance: false;
       summary: Vimeo library;
-      releaseNotes: "Initial Checkin";
+      releaseNotes: "";
       description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.";
       copyright: "Copyright (c) 2014-2015 TechSmith Corporation. All rights reserved.";
       tags: { native, tsc, vimeo, utility, vs2015, cpp, dynamicmfc, mfc, dynamiccpp };
