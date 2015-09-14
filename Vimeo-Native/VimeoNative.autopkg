@@ -21,7 +21,15 @@ nuget
       requireLicenseAcceptance: false;
       summary: Vimeo library;
       releaseNotes: "";
-      description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.";
+      description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.
+	  
+New features:
+    v 10.0.0.0 Updated to use Visual Studio 2015/.NET 4.6
+Breaking changes:
+    v 10.0.0.0 Updated to use Visual Studio 2015/.NET 4.6
+Bugfixes:
+Misc:	  
+	  ";
       copyright: "Copyright (c) 2014-2015 TechSmith Corporation. All rights reserved.";
       tags: { native, tsc, vimeo, utility, vs2015, cpp, dynamicmfc, mfc, dynamiccpp };
    };
