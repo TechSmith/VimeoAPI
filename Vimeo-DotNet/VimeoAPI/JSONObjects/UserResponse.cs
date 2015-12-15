@@ -11,16 +11,16 @@ namespace VimeoAPI
    {
       public string uri;
       public string name;
-      public string link;
-      public string location;
-      public string bio;
-      public string created_time;
-      public string account;
-      public Pictures pictures;
-      public List<string> websites;
-      public PeferencesResponse preferences;
-      public List<string> content_filter;
-      public UploadQuotaResponse upload_quota;
+      //public string link;
+      //public string location;
+      //public string bio;
+      //public string created_time;
+      //public string account;
+      //public Pictures pictures;
+      //public List<string> websites;
+      //public PeferencesResponse preferences;
+      //public List<string> content_filter;
+      //public UploadQuotaResponse upload_quota;
    }
 
    public class MetadataResponse
@@ -70,9 +70,9 @@ namespace VimeoAPI
 
    public class SpaceResponse
    {
-      public int free;
-      public int max;
-      public int used;
+      public long free;
+      public long max;
+      public long used;
    }
 
    public class QuotaResponse
