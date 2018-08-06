@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany( "TechSmith Corporation" )]
 [assembly: AssemblyProduct("VimeoAPI")]
-[assembly: AssemblyCopyright("Copyright © 2015 TechSmith Corporation. All rights reserved.")]
+[assembly: AssemblyCopyright( "Copyright © 2015-2018 TechSmith Corporation. All rights reserved." )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
