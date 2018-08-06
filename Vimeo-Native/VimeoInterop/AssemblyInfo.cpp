@@ -16,7 +16,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("TechSmith Corporation")];
 [assembly:AssemblyProductAttribute("VimeoInterop")];
-[assembly:AssemblyCopyrightAttribute("Copyright (c) 2015 TechSmith Corporation. All rights reserved.")];
+[assembly:AssemblyCopyrightAttribute("Copyright (c) 2015-2018 TechSmith Corporation. All rights reserved.")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
@@ -31,7 +31,7 @@ using namespace System::Security::Permissions;
 // You can specify all the value or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
 
-[assembly:AssemblyVersionAttribute("10.0.0.0")];
+[assembly:AssemblyVersionAttribute("11.0.0.0")];
 
 [assembly:ComVisible(false)];
 
