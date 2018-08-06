@@ -61,7 +61,9 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::GenerateQueryParams");
          if (KeyValues.Count == 0)
+         {
             return string.Empty;
+         }
 
          string strRet = string.Empty;
 
@@ -92,10 +94,14 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::ObtainAccessToken");
          if (!StartsWithCallbackURL(strURL))
+         {
             return false;
+         }
 
          if (strURL.Contains("error"))
+         {
             return false;
+         }
 
          string strAccessCode = strURL.Substring(strURL.IndexOf("?") + 6); /*The +6 is to get after the ?code=*/
 
@@ -170,7 +176,9 @@ namespace VimeoAPI
                foreach (var strScope in m_eScope.GetFlagsString())
                {
                   if (!accessToken.scope.Contains(strScope))
+                  {
                      return false;
+                  }
                }
 
                //Save off access_token for authenticated requests
@@ -246,21 +254,29 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          UploadTicketResponse ticket = GenerateUploadTicket();
 
          //Make sure ticket is good! :)
          if (ticket == null || string.IsNullOrWhiteSpace(ticket.ticket_id))
+         {
             return false;
+         }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          bool bOK = UploadFile(ticket.upload_link_secure, strFile, ticket.complete_uri, pProgress);
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          if (bOK)
          {
@@ -268,9 +284,11 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
-         if( bOK )
+         if ( bOK )
          {
             bool bSetPrivacy = SetPrivacyInformation( m_strClipURI, ePrivacy, strPassword );
             if ( !bSetPrivacy )
@@ -280,7 +298,9 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          if (bOK)
          {
@@ -288,7 +308,9 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          return bOK;
       }
@@ -409,7 +431,9 @@ namespace VimeoAPI
 
                //Not sure exactly what to do if I get an error :(
                if (status != HttpStatusCode.OK)
+               {
                   return false;
+               }
 
                Stream responseStream = response.GetResponseStream();
                StreamReader r = new StreamReader(responseStream);
@@ -427,7 +451,9 @@ namespace VimeoAPI
 
                lStart += lBytes;
                if (lEnd >= lFileSize)
+               {
                   break;
+               }
             }
             catch (WebException wex)
             {
@@ -638,8 +664,11 @@ namespace VimeoAPI
                   {"privacy.view", GetPrivacyString(ePrivacy)                    }
                };
                if (ePrivacy == Privacy.Password)
+               {
                   KeyValues.Add(
                      new KeyValuePair<string, string>("password", strPassword));
+               }
+
                string strQueryParams = GenerateQueryParams(KeyValues);
 
                VimeoLogger.Log( "Vimeo::SetPrivacyInformation; privacy.view: " + GetPrivacyString( ePrivacy ) );
@@ -771,7 +800,9 @@ namespace VimeoAPI
               Newtonsoft.Json.JsonConvert.DeserializeObject<UserResponse>(strResponse);
 
             if ( string.IsNullOrEmpty(userResponse.uri))
+            {
                return false;
+            }
 
             //Save off access_token for authenticated requests
             m_strAccessToken = strAccessToken;
@@ -849,7 +880,9 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::GetURL");
          if ( string.IsNullOrEmpty(m_strClipURI))
+         {
             return false;
+         }
 
          int nSlash = m_strClipURI.LastIndexOf('/');
          strURL = "http://vimeo.com/" + m_strClipURI.Substring(nSlash + 1);

@@ -39,15 +39,23 @@ namespace VimeoAPI
       public static IEnumerable<VimeoScope> GetFlags(this VimeoScope scope)
       {
          foreach (VimeoScope value in GetAllFlags())
+         {
             if (scope.HasFlag(value))
+            {
                yield return value;
+            }
+         }
       }
 
       public static IEnumerable<string> GetFlagsString(this VimeoScope scope)
       {
          foreach (VimeoScope value in GetAllFlags())
+         {
             if (scope.HasFlag(value))
+            {
                yield return value.AsString();
+            }
+         }
       }
 
       public static string AsString(this VimeoScope scope)
