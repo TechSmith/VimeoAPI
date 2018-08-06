@@ -66,16 +66,12 @@ namespace VimeoAPI
             case VimeoScope.Public:
                Debug.Assert(scope == VimeoScope.Public);//Missing case?
                return "public";
-            break;
             case VimeoScope.Private:
                return "private";
-            break;
             case VimeoScope.Upload:
                return "upload";
-            break;
             case VimeoScope.Edit:
                return "edit";
-            break;
          }
       }
 

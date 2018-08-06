@@ -718,7 +718,6 @@ namespace VimeoAPI
             case Privacy.Password:
                return "password";
          }
-         return "anybody";
       }
 
       public bool SetVideoTags(string strClipURI, string strTags)
