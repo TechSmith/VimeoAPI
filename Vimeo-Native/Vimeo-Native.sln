@@ -12,6 +12,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCVimeoApp", "MFCVimeoApp\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferencer", "NugetReferencer\NuGetReferencer.csproj", "{7D4C345B-1458-4641-A9A6-5E7C92E588CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{6C2C8305-28A0-47E9-B3CC-CDAC1BBA0CEE}"
+	ProjectSection(SolutionItems) = preProject
+		VimeoNative.autopkg = VimeoNative.autopkg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
