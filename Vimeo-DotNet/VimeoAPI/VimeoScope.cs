@@ -39,15 +39,23 @@ namespace VimeoAPI
       public static IEnumerable<VimeoScope> GetFlags(this VimeoScope scope)
       {
          foreach (VimeoScope value in GetAllFlags())
+         {
             if (scope.HasFlag(value))
+            {
                yield return value;
+            }
+         }
       }
 
       public static IEnumerable<string> GetFlagsString(this VimeoScope scope)
       {
          foreach (VimeoScope value in GetAllFlags())
+         {
             if (scope.HasFlag(value))
+            {
                yield return value.AsString();
+            }
+         }
       }
 
       public static string AsString(this VimeoScope scope)
@@ -58,22 +66,18 @@ namespace VimeoAPI
             case VimeoScope.Public:
                Debug.Assert(scope == VimeoScope.Public);//Missing case?
                return "public";
-            break;
             case VimeoScope.Private:
                return "private";
-            break;
             case VimeoScope.Upload:
                return "upload";
-            break;
             case VimeoScope.Edit:
                return "edit";
-            break;
          }
       }
 
       public static string GetSpaceSeparatedValue(this VimeoScope scope)
       {
-         return String.Join(" ", scope.GetFlagsString());
+         return string.Join(" ", scope.GetFlagsString());
       }
    }
 }

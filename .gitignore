@@ -24,6 +24,7 @@ dlldata.c
 *.suo
 *.user
 *.sln.docstates
+.vs/
 
 *_i.c
 *_p.c

@@ -25,7 +25,7 @@ namespace VimeoAPI
          m_strClientID = strClientID;
          m_strClientSecret = strClientSecret;
 
-         Debug.Assert(!String.IsNullOrEmpty(m_strClientID) && !String.IsNullOrEmpty(m_strClientSecret));//Required!
+         Debug.Assert(!string.IsNullOrEmpty(m_strClientID) && !string.IsNullOrEmpty(m_strClientSecret));//Required!
       }
 
       public bool GetUserAuthorizationURL(ref string strURL)
@@ -39,9 +39,9 @@ namespace VimeoAPI
          //state           Yes         A unique value which the client will return alongside access tokens
 
          string strScopeValue = m_eScope.GetSpaceSeparatedValue();
-         Debug.Assert(!String.IsNullOrEmpty(strScopeValue));//Should not happen!
-         Debug.Assert(!String.IsNullOrEmpty(m_strClientID));
-         Debug.Assert(!String.IsNullOrEmpty(m_strRedirectURI));
+         Debug.Assert(!string.IsNullOrEmpty(strScopeValue));//Should not happen!
+         Debug.Assert(!string.IsNullOrEmpty(m_strClientID));
+         Debug.Assert(!string.IsNullOrEmpty(m_strRedirectURI));
 
          IDictionary<string, string> KeyValues = new Dictionary<string, string>
          {
@@ -61,17 +61,19 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::GenerateQueryParams");
          if (KeyValues.Count == 0)
-            return String.Empty;
+         {
+            return string.Empty;
+         }
 
-         string strRet = String.Empty;
+         string strRet = string.Empty;
 
          foreach (var pair in KeyValues)
          {
-            if (!String.IsNullOrEmpty(strRet))
+            if (!string.IsNullOrEmpty(strRet))
             {
                strRet += "&";
             }
-            strRet += String.Format("{0}={1}",
+            strRet += string.Format("{0}={1}",
                HttpUtility.UrlEncode(pair.Key),
                HttpUtility.UrlEncode(pair.Value));
          }
@@ -84,18 +86,22 @@ namespace VimeoAPI
          VimeoLogger.Log("Vimeo::BuildURL");
          Debug.Assert(strPath.StartsWith("/"));//This is expected
 
-         return String.Format("https://api.vimeo.com{0}{1}", strPath, 
-            String.IsNullOrEmpty(strParams) ? String.Empty : "?" + strParams);
+         return string.Format("https://api.vimeo.com{0}{1}", strPath,
+            string.IsNullOrEmpty(strParams) ? string.Empty : "?" + strParams);
       }
 
       public bool ObtainAccessToken(string strURL)
       {
          VimeoLogger.Log("Vimeo::ObtainAccessToken");
          if (!StartsWithCallbackURL(strURL))
+         {
             return false;
+         }
 
          if (strURL.Contains("error"))
+         {
             return false;
+         }
 
          string strAccessCode = strURL.Substring(strURL.IndexOf("?") + 6); /*The +6 is to get after the ?code=*/
 
@@ -108,19 +114,19 @@ namespace VimeoAPI
       private bool ExchangeCodeForAccessTokens(string strAccessCode)
       {
          VimeoLogger.Log("Vimeo::ExchangeCodeForAccessTokens");
-         m_strAccessToken = String.Empty;
+         m_strAccessToken = string.Empty;
 
          Debug.Assert(!StartsWithCallbackURL(strAccessCode));//Call ObtainAccessToken
-         string strURL = BuildURL(Endpoints.AccessToken, String.Empty);
+         string strURL = BuildURL(Endpoints.AccessToken, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          //The authorization header can be found on your app page or can be built with your client id and client secret
          //'Authorization: basic ' + base64(client_id + ':' + client_secret)
-         string strAuthorization = String.Format("{0}:{1}", m_strClientID, m_strClientSecret);
+         string strAuthorization = string.Format("{0}:{1}", m_strClientID, m_strClientSecret);
          string strAuthorizationBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(strAuthorization));
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization", String.Format("Basic {0}", strAuthorizationBase64)}
+            {"Authorization", string.Format("Basic {0}", strAuthorizationBase64)}
          };
          request.Method = @"POST";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -170,7 +176,9 @@ namespace VimeoAPI
                foreach (var strScope in m_eScope.GetFlagsString())
                {
                   if (!accessToken.scope.Contains(strScope))
+                  {
                      return false;
+                  }
                }
 
                //Save off access_token for authenticated requests
@@ -197,7 +205,7 @@ namespace VimeoAPI
          }
 
          //Return true if I have an access_token :)
-         return !String.IsNullOrEmpty(m_strAccessToken);
+         return !string.IsNullOrEmpty(m_strAccessToken);
       }
 
       public void BackupParseForAccessToken(string strResponse)
@@ -208,7 +216,7 @@ namespace VimeoAPI
          int nStart = strResponse.IndexOf("\"access_token\":\"");
          int nEnd = strResponse.IndexOf("\",\"", nStart);
          string strAccessToken = strResponse.Substring(nStart, nEnd - nStart);
-         m_strAccessToken = String.Join(String.Empty, strAccessToken.Split(new char[] { '\"', ',' }, StringSplitOptions.RemoveEmptyEntries));
+         m_strAccessToken = string.Join( string.Empty, strAccessToken.Split(new char[] { '\"', ',' }, StringSplitOptions.RemoveEmptyEntries));
       }
 
       public static bool StartsWithCallbackURL(string strURL)
@@ -221,7 +229,7 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::GetAccessToken");
          strAccessToken = m_strAccessToken;
-         return !String.IsNullOrEmpty(strAccessToken);
+         return !string.IsNullOrEmpty(strAccessToken);
       }
 
       private string m_strClipURI;
@@ -239,28 +247,36 @@ namespace VimeoAPI
          VimeoLogger.Log("Vimeo::Upload");
          Debug.Assert(File.Exists(strFile));
 
-         Debug.Assert(!String.IsNullOrEmpty(m_strAccessToken));//Did you call ObtainAccessToken?
-         if (String.IsNullOrEmpty(m_strAccessToken))
+         Debug.Assert(!string.IsNullOrEmpty(m_strAccessToken));//Did you call ObtainAccessToken?
+         if ( string.IsNullOrEmpty(m_strAccessToken))
          {
             return false;
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          UploadTicketResponse ticket = GenerateUploadTicket();
 
          //Make sure ticket is good! :)
-         if (ticket == null || String.IsNullOrWhiteSpace(ticket.ticket_id))
+         if (ticket == null || string.IsNullOrWhiteSpace(ticket.ticket_id))
+         {
             return false;
+         }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          bool bOK = UploadFile(ticket.upload_link_secure, strFile, ticket.complete_uri, pProgress);
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          if (bOK)
          {
@@ -268,9 +284,11 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
-         if( bOK )
+         if ( bOK )
          {
             bool bSetPrivacy = SetPrivacyInformation( m_strClipURI, ePrivacy, strPassword );
             if ( !bSetPrivacy )
@@ -280,7 +298,9 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          if (bOK)
          {
@@ -288,7 +308,9 @@ namespace VimeoAPI
          }
 
          if (pProgress != null && pProgress.GetCanceled())
+         {
             return false;
+         }
 
          return bOK;
       }
@@ -296,12 +318,12 @@ namespace VimeoAPI
       private UploadTicketResponse GenerateUploadTicket()
       {
          VimeoLogger.Log("Vimeo::GenerateUploadTicket");
-         string strURL = BuildURL(Endpoints.UploadTicket, String.Empty);
+         string strURL = BuildURL(Endpoints.UploadTicket, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization", String.Format("bearer {0}", m_strAccessToken)}
+            {"Authorization", string.Format("bearer {0}", m_strAccessToken)}
          };
          request.Method = @"POST";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -355,7 +377,7 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::UploadFile");
          Debug.Assert(File.Exists(strFile));
-         Debug.Assert(!String.IsNullOrWhiteSpace(strURL));
+         Debug.Assert(!string.IsNullOrWhiteSpace(strURL));
 
          m_strClipURI = null;
 
@@ -385,7 +407,7 @@ namespace VimeoAPI
             request.ContentType = @"video/mp4";
             request.Headers = new WebHeaderCollection()
             {
-               {"Content-Range", String.Format("bytes {0}-{1}/{2}", lStart, lEnd, lFileSize)}
+               {"Content-Range", string.Format("bytes {0}-{1}/{2}", lStart, lEnd, lFileSize)}
             };
             request.KeepAlive = false;
 
@@ -409,7 +431,9 @@ namespace VimeoAPI
 
                //Not sure exactly what to do if I get an error :(
                if (status != HttpStatusCode.OK)
+               {
                   return false;
+               }
 
                Stream responseStream = response.GetResponseStream();
                StreamReader r = new StreamReader(responseStream);
@@ -427,7 +451,9 @@ namespace VimeoAPI
 
                lStart += lBytes;
                if (lEnd >= lFileSize)
+               {
                   break;
+               }
             }
             catch (WebException wex)
             {
@@ -457,7 +483,7 @@ namespace VimeoAPI
 
          HttpStatusCode status = HttpStatusCode.Unused;
          {
-            Debug.Assert(!String.IsNullOrWhiteSpace(strURL));
+            Debug.Assert(!string.IsNullOrWhiteSpace(strURL));
 
             HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
             request.Method = @"PUT";
@@ -499,14 +525,14 @@ namespace VimeoAPI
       private bool CompleteUpload(string strCompleteUri)
       {
          VimeoLogger.Log("Vimeo::CompleteUpload");
-         Debug.Assert(!String.IsNullOrWhiteSpace(strCompleteUri));
+         Debug.Assert(!string.IsNullOrWhiteSpace(strCompleteUri));
 
-         string strURL = BuildURL(strCompleteUri, String.Empty);
+         string strURL = BuildURL(strCompleteUri, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization", String.Format("bearer {0}", m_strAccessToken)}
+            {"Authorization", string.Format("bearer {0}", m_strAccessToken)}
          };
          request.Method = @"DELETE";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -545,19 +571,19 @@ namespace VimeoAPI
       public bool SetVideoInformation(string strClipURI, string strTitle, string strDescription)
       {
          VimeoLogger.Log("Vimeo::SetVideoInformation");
-         Debug.Assert( !String.IsNullOrEmpty( strClipURI ) );
-         if ( String.IsNullOrEmpty( strClipURI ) )
+         Debug.Assert( !string.IsNullOrEmpty( strClipURI ) );
+         if ( string.IsNullOrEmpty( strClipURI ) )
          {
             VimeoLogger.Log("Vimeo::SetVideoInformation; No Clip URI");
             return false;
          }
 
-         string strURL = BuildURL(strClipURI, String.Empty);
+         string strURL = BuildURL(strClipURI, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization"  , String.Format("bearer {0}", m_strAccessToken) }
+            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
          request.Method = @"PATCH";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -609,19 +635,19 @@ namespace VimeoAPI
       public bool SetPrivacyInformation( string strClipURI, Privacy ePrivacy, string strPassword )
       {
          VimeoLogger.Log( "Vimeo::SetPrivacyInformation" );
-         Debug.Assert( !String.IsNullOrEmpty( strClipURI ) );
-         if ( String.IsNullOrEmpty( strClipURI ) )
+         Debug.Assert( !string.IsNullOrEmpty( strClipURI ) );
+         if ( string.IsNullOrEmpty( strClipURI ) )
          {
             VimeoLogger.Log( "Vimeo::SetPrivacyInformation; No Clip URI" );
             return false;
          }
 
-         string strURL = BuildURL( strClipURI, String.Empty );
+         string strURL = BuildURL( strClipURI, string.Empty );
 
          HttpWebRequest request = WebRequest.CreateDefault( new Uri( strURL ) ) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization"  , String.Format("bearer {0}", m_strAccessToken) }
+            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
          request.Method = @"PATCH";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -638,8 +664,11 @@ namespace VimeoAPI
                   {"privacy.view", GetPrivacyString(ePrivacy)                    }
                };
                if (ePrivacy == Privacy.Password)
+               {
                   KeyValues.Add(
                      new KeyValuePair<string, string>("password", strPassword));
+               }
+
                string strQueryParams = GenerateQueryParams(KeyValues);
 
                VimeoLogger.Log( "Vimeo::SetPrivacyInformation; privacy.view: " + GetPrivacyString( ePrivacy ) );
@@ -689,24 +718,23 @@ namespace VimeoAPI
             case Privacy.Password:
                return "password";
          }
-         return "anybody";
       }
 
       public bool SetVideoTags(string strClipURI, string strTags)
       {
          VimeoLogger.Log("Vimeo::SetVideoTags");
-         Debug.Assert(!String.IsNullOrEmpty(m_strClipURI));
-         if (String.IsNullOrEmpty(m_strClipURI))
+         Debug.Assert(!string.IsNullOrEmpty(m_strClipURI));
+         if ( string.IsNullOrEmpty(m_strClipURI))
          {
             return false;
          }
 
-         string strURL = BuildURL(String.Format(Endpoints.ClipTags, strClipURI, strTags), String.Empty);
+         string strURL = BuildURL( string.Format(Endpoints.ClipTags, strClipURI, strTags), string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization"  , String.Format("bearer {0}", m_strAccessToken) }
+            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
          request.Method = @"PUT";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -740,14 +768,14 @@ namespace VimeoAPI
       public bool LoadAccessToken(string strAccessToken)
       {
          VimeoLogger.Log("Vimeo::LoadAccessToken");
-         m_strAccessToken  = String.Empty;
-         m_strUserName     = String.Empty;
-         string strURL = BuildURL(Endpoints.Me, String.Empty);
+         m_strAccessToken  = string.Empty;
+         m_strUserName     = string.Empty;
+         string strURL = BuildURL(Endpoints.Me, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization", String.Format("bearer {0}", strAccessToken)}
+            {"Authorization", string.Format("bearer {0}", strAccessToken)}
          };
          request.Method = @"GET";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -770,8 +798,10 @@ namespace VimeoAPI
             UserResponse userResponse =
               Newtonsoft.Json.JsonConvert.DeserializeObject<UserResponse>(strResponse);
 
-            if (String.IsNullOrEmpty(userResponse.uri))
+            if ( string.IsNullOrEmpty(userResponse.uri))
+            {
                return false;
+            }
 
             //Save off access_token for authenticated requests
             m_strAccessToken = strAccessToken;
@@ -794,20 +824,20 @@ namespace VimeoAPI
       public int GetCategories()
       {
          VimeoLogger.Log("Vimeo::GetCategories");
-         Debug.Assert(!String.IsNullOrEmpty(m_strAccessToken));//Did you call ObtainAccessToken?
-         if (String.IsNullOrEmpty(m_strAccessToken))
+         Debug.Assert(!string.IsNullOrEmpty(m_strAccessToken));//Did you call ObtainAccessToken?
+         if ( string.IsNullOrEmpty(m_strAccessToken))
          {
             return -1;
          }
 
          m_Categories = null;
 
-         string strURL = BuildURL(Endpoints.Categories, String.Empty);
+         string strURL = BuildURL(Endpoints.Categories, string.Empty);
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
-            {"Authorization"  , String.Format("bearer {0}", m_strAccessToken) }
+            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
          request.Method = @"GET";
          request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
@@ -842,41 +872,43 @@ namespace VimeoAPI
       {
          VimeoLogger.Log("Vimeo::GetUserName");
          strUserName = m_strUserName;
-         return !String.IsNullOrEmpty(strUserName);
+         return !string.IsNullOrEmpty(strUserName);
       }
 
       public bool GetURL(ref string strURL)
       {
          VimeoLogger.Log("Vimeo::GetURL");
-         if (String.IsNullOrEmpty(m_strClipURI))
+         if ( string.IsNullOrEmpty(m_strClipURI))
+         {
             return false;
+         }
 
          int nSlash = m_strClipURI.LastIndexOf('/');
          strURL = "http://vimeo.com/" + m_strClipURI.Substring(nSlash + 1);
 
-         return !String.IsNullOrEmpty(strURL);
+         return !string.IsNullOrEmpty(strURL);
       }
 
-      private string m_strErrorMessage = String.Empty;
+      private string m_strErrorMessage = string.Empty;
 
       public bool GetErrorMessage(ref string strErrorMessage)
       {
          VimeoLogger.Log("Vimeo::GetErrorMessage");
          strErrorMessage = m_strErrorMessage;
 
-         return !String.IsNullOrEmpty(strErrorMessage);
+         return !string.IsNullOrEmpty(strErrorMessage);
       }
    }
 
    public class VimeoLogger
    {
-      public static String GetLogFullPath()
+      public static string GetLogFullPath()
       {
          string strPath = System.IO.Path.GetTempPath();
          strPath += "VimeoLog.txt";
          return strPath;
       }
-      public static void Log(String strMessage)
+      public static void Log( string strMessage )
       {
          using (StreamWriter w = File.AppendText(GetLogFullPath()))
          {
