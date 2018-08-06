@@ -65,9 +65,8 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VimeoAPI, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\VimeoAPI.2.0.0.0\lib\net46\VimeoAPI.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="VimeoAPI, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\VimeoAPI.3.1.0\lib\net46\VimeoAPI.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
