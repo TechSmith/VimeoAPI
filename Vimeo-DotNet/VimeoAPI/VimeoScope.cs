@@ -73,7 +73,7 @@ namespace VimeoAPI
 
       public static string GetSpaceSeparatedValue(this VimeoScope scope)
       {
-         return String.Join(" ", scope.GetFlagsString());
+         return string.Join(" ", scope.GetFlagsString());
       }
    }
 }
