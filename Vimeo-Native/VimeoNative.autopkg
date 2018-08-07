@@ -2,7 +2,7 @@ configurations
 {
 	Toolset {
 		key : "PlatformToolset";
-		choices: { v140 };
+		choices: { v141 };
 	};
 }
 
@@ -11,7 +11,7 @@ nuget
    nuspec
    {
       id = VimeoNative;
-      version: 10.0.0.0;
+      version: 11.0.0.0;
       title: Vimeo Native Library;
       authors: { TechSmith Corporation };
       owners: { TechSmith Corporation };
@@ -22,16 +22,18 @@ nuget
       summary: Vimeo library;
       releaseNotes: "";
       description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.
-	  
+
 New features:
+    v 11.0.0.0 Updated to use Visual Studio 2017
     v 10.0.0.0 Updated to use Visual Studio 2015/.NET 4.6
 Breaking changes:
+    v 11.0.0.0 Updated to use Visual Studio 2017
     v 10.0.0.0 Updated to use Visual Studio 2015/.NET 4.6
 Bugfixes:
-Misc:	  
-	  ";
-      copyright: "Copyright (c) 2014-2015 TechSmith Corporation. All rights reserved.";
-      tags: { native, tsc, vimeo, utility, vs2015, cpp, dynamicmfc, mfc, dynamiccpp };
+Misc:
+      ";
+      copyright: "Copyright (c) 2014-2018 TechSmith Corporation. All rights reserved.";
+      tags: { native, tsc, vimeo, utility, vs2017, cpp, dynamicmfc, mfc, dynamiccpp };
    };
 
    dependencies
@@ -45,7 +47,7 @@ Misc:
    {
       nestedInclude:  { #destination = ${d_include}Vimeo; include\Vimeo\*.h };
 
-      ("Win32,x64", "v140", "Debug,Release") =>
+      ("Win32,x64", "v141", "Debug,Release") =>
       {
          [${0},${1},${2}]
          {

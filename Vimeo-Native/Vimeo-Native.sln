@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VimeoInterop", "VimeoInterop\VimeoInterop.vcxproj", "{85F6CD6E-1FBF-46C1-B6F0-8680FBDC3C6E}"
 EndProject
@@ -11,6 +11,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCVimeoApp", "MFCVimeoApp\
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGetReferencer", "NugetReferencer\NuGetReferencer.csproj", "{7D4C345B-1458-4641-A9A6-5E7C92E588CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{6C2C8305-28A0-47E9-B3CC-CDAC1BBA0CEE}"
+	ProjectSection(SolutionItems) = preProject
+		VimeoNative.autopkg = VimeoNative.autopkg
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,5 +52,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {022292F7-9E95-48A1-9B02-71CC5CABDD29}
 	EndGlobalSection
 EndGlobal
