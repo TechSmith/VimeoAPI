@@ -95,5 +95,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VimeoAPI\VimeoAPI.csproj">
+      <Project>{f13df16e-b846-4532-ab59-b26418d1f95a}</Project>
+      <Name>VimeoAPI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
