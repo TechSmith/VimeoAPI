@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{BADD56
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VimeoHarness", "VimeoHarness\VimeoHarness.csproj", "{C0CFF370-4285-4BF8-972A-8F069AF38A95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|AnyCPU = Debug|AnyCPU
@@ -20,6 +22,10 @@ Global
 		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Debug|AnyCPU.Build.0 = Debug|Any CPU
 		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|AnyCPU.ActiveCfg = Release|Any CPU
 		{F13DF16E-B846-4532-AB59-B26418D1F95A}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{C0CFF370-4285-4BF8-972A-8F069AF38A95}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{C0CFF370-4285-4BF8-972A-8F069AF38A95}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{C0CFF370-4285-4BF8-972A-8F069AF38A95}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{C0CFF370-4285-4BF8-972A-8F069AF38A95}.Release|AnyCPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
