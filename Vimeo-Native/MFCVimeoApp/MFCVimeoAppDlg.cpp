@@ -159,7 +159,7 @@ HCURSOR CMFCVimeoAppDlg::OnQueryDragIcon()
 
 void CMFCVimeoAppDlg::OnBnClickedBtnUpload()
 {
-   CString strAccessToken, strFile, strTitle, strDescription, strTags, strPassword;
+   CString strAccessToken, strFile, strTitle, strDescription, strTags, strPassword, strCaptions;
    struct IDAndString
    {
       UINT uid;
@@ -202,6 +202,18 @@ void CMFCVimeoAppDlg::OnBnClickedBtnUpload()
       goto Free;
    }
 
+   strCaptions = _T( "WEBVTT\
+\
+                      00:01.000 -- > 00:03.000\
+                      Now is the winter of our discontent.\
+\
+                      00 : 04.000 -- > 00:06.000\
+                      — Really ?\
+                      — Really.\
+\
+                      00 : 08.000 -- > 00:09.000\
+                      Bummer." );
+
    nRes = VimeoUploadFile(vimeo, 
       strFile.LockBuffer(), 
       strTitle.LockBuffer(), 
@@ -209,12 +221,14 @@ void CMFCVimeoAppDlg::OnBnClickedBtnUpload()
       strTags.LockBuffer(), 
       VIMEO_PRIVACY_ANYBODY,
       strPassword.LockBuffer(),
+      strCaptions.LockBuffer(),
       NULL);
    strFile.UnlockBuffer();
    strTitle.UnlockBuffer();
    strDescription.UnlockBuffer();
    strTags.UnlockBuffer();
    strPassword.UnlockBuffer();
+   strCaptions.UnlockBuffer();
    if( VIMEO_SUCCESS != nRes )
    {
       AfxMessageBox(_T("Failure to upload the file"));

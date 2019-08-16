@@ -47,15 +47,36 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="TechSmith.Win32, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TechSmith.Win32.3.2.0\lib\net46\TechSmith.Win32.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WPFCommonViewModel, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WPFCommonViewModel.4.1.0\lib\net46\WPFCommonViewModel.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controllers\VimeoController.cs" />
+    <Compile Include="DataTypes\Config.cs" />
+    <Compile Include="DataTypes\ObtainedAccessTokenArgs.cs" />
+    <Compile Include="Dialogs\LoginDlg.xaml.cs">
+      <DependentUpon>LoginDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\WebBrowserHelper.cs" />
+    <Compile Include="Interfaces\IVimeoController.cs" />
+    <Compile Include="Interfaces\IVimeoModel.cs" />
+    <Compile Include="ViewModel\LoginDlgViewModel.cs" />
+    <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Page Include="Dialogs\LoginDlg.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -87,6 +108,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -101,5 +123,6 @@
       <Name>VimeoAPI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

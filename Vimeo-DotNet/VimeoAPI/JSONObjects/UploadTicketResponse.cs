@@ -9,10 +9,13 @@ namespace VimeoAPI
    //So you can't just adjust the variable names without careful consideration
    public class UploadTicketResponse
    {
+      public class Upload
+      {
+         public string upload_link;
+      }
+
       public string uri;
-      public string complete_uri;
-      public string ticket_id;
-      public UserResponse user;
-      public string upload_link_secure;
+      public string link;
+      public Upload upload;
    }
 }

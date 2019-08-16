@@ -167,20 +167,21 @@ inline System::Boolean IVimeoProgressAdapter::GetCanceled()
    return m_pProgress ? m_pProgress->GetCanceled() : false;
 }
 
-VIMEO_EXTERN int VimeoUploadFile(VimeoHandle pHandle, VimeoString* pstrPath, VimeoString* pstrTitle, VimeoString* pstrDescription, VimeoString* pstrTags, int nPrivacy, VimeoString* pstrPassword, IVimeoProgress* pProgress)
+VIMEO_EXTERN int VimeoUploadFile(VimeoHandle pHandle, VimeoString* pstrPath, VimeoString* pstrTitle, VimeoString* pstrDescription, VimeoString* pstrTags, int nPrivacy, VimeoString* pstrPassword, VimeoString* pstrCaptions, IVimeoProgress* pProgress)
 {
    String ^strPath         = gcnew String(pstrPath);
    String ^strTitle        = gcnew String(pstrTitle);
    String ^strDescription  = gcnew String(pstrDescription);
    String ^strTags         = gcnew String(pstrTags);
    String ^strPassword     = gcnew String(pstrPassword);
+   String ^strCaptions     = gcnew String(pstrCaptions);
    VimeoAPI::Vimeo::Privacy ePrivacy = (VimeoAPI::Vimeo::Privacy)nPrivacy;
    VimeoAPI::Vimeo^ pVimeo = GET_LIB(pHandle);
    CHECK_LIB(pVimeo);
 
    VimeoAPI::IProgress^ pProg = gcnew IVimeoProgressAdapter(pProgress);
 
-   bool bOK = pVimeo->Upload(strPath, strTitle, strDescription, strTags, ePrivacy, strPassword, pProg);
+   bool bOK = pVimeo->Upload(strPath, strTitle, strDescription, strTags, ePrivacy, strPassword, strCaptions, pProg);
 
    return bOK ? VIMEO_SUCCESS : VIMEO_FAILURE_GENERIC;
 }

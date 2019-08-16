@@ -64,6 +64,7 @@
     <Compile Include="JSONObjects\AccessTokenResponse.cs" />
     <Compile Include="JSONObjects\CategoriesResponse.cs" />
     <Compile Include="Endpoints.cs" />
+    <Compile Include="JSONObjects\UploadRequest.cs" />
     <Compile Include="JSONObjects\UploadTicketResponse.cs" />
     <Compile Include="JSONObjects\UserResponse.cs" />
     <Compile Include="UtilExtensions.cs" />

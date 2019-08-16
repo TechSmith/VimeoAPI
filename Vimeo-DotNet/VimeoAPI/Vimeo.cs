@@ -8,6 +8,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using VimeoAPI.JSONObjects;
 
 namespace VimeoAPI
 {
@@ -129,7 +130,7 @@ namespace VimeoAPI
             {"Authorization", string.Format("Basic {0}", strAuthorizationBase64)}
          };
          request.Method = @"POST";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
+         request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
          request.ContentType = @"application/x-www-form-urlencoded";
          request.KeepAlive = false;
 
@@ -242,7 +243,7 @@ namespace VimeoAPI
          Password
       }
 
-      public bool Upload(string strFile, string strTitle, string strDescription, string strTags, Privacy ePrivacy, string strPassword, IProgress pProgress)
+      public bool Upload(string strFile, string strTitle, string strDescription, string strTags, Privacy ePrivacy, string strPassword, string captionData, IProgress pProgress)
       {
          VimeoLogger.Log("Vimeo::Upload");
          Debug.Assert(File.Exists(strFile));
@@ -258,10 +259,10 @@ namespace VimeoAPI
             return false;
          }
 
-         UploadTicketResponse ticket = GenerateUploadTicket();
+         UploadTicketResponse ticket = GenerateUploadTicket( strFile, strTitle, strDescription, strTags, ePrivacy, strPassword );
 
          //Make sure ticket is good! :)
-         if (ticket == null || string.IsNullOrWhiteSpace(ticket.ticket_id))
+         if (ticket == null || string.IsNullOrWhiteSpace(ticket.uri))
          {
             return false;
          }
@@ -271,17 +272,7 @@ namespace VimeoAPI
             return false;
          }
 
-         bool bOK = UploadFile(ticket.upload_link_secure, strFile, ticket.complete_uri, pProgress);
-
-         if (pProgress != null && pProgress.GetCanceled())
-         {
-            return false;
-         }
-
-         if (bOK)
-         {
-            bOK = SetVideoInformation(m_strClipURI, strTitle, strDescription);
-         }
+         bool bOK = UploadFile(ticket.upload.upload_link, strFile, ticket.link, pProgress);
 
          if (pProgress != null && pProgress.GetCanceled())
          {
@@ -290,24 +281,15 @@ namespace VimeoAPI
 
          if ( bOK )
          {
-            bool bSetPrivacy = SetPrivacyInformation( m_strClipURI, ePrivacy, strPassword );
-            if ( !bSetPrivacy )
+            if ( !string.IsNullOrEmpty( captionData ) )
             {
-               //TODO: keep note; but not fail upload.
+               string videoID = ticket.uri.Substring( ticket.uri.LastIndexOf( '/' ) + 1 );
+               int nVideoID = int.Parse( videoID );
+               bOK = SendCaptions( nVideoID, captionData );
             }
          }
 
-         if (pProgress != null && pProgress.GetCanceled())
-         {
-            return false;
-         }
-
-         if (bOK)
-         {
-            bOK = SetVideoTags(m_strClipURI, strTags);
-         }
-
-         if (pProgress != null && pProgress.GetCanceled())
+         if ( pProgress != null && pProgress.GetCanceled() )
          {
             return false;
          }
@@ -315,10 +297,13 @@ namespace VimeoAPI
          return bOK;
       }
 
-      private UploadTicketResponse GenerateUploadTicket()
+      private UploadTicketResponse GenerateUploadTicket( string strFile, string strTitle, string strDescription, string strTags, Privacy ePrivacy, string strPassword )
       {
          VimeoLogger.Log("Vimeo::GenerateUploadTicket");
          string strURL = BuildURL(Endpoints.UploadTicket, string.Empty);
+
+         FileInfo fi = new FileInfo( strFile );
+         long lFileSize = fi.Length;
 
          HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
@@ -326,24 +311,38 @@ namespace VimeoAPI
             {"Authorization", string.Format("bearer {0}", m_strAccessToken)}
          };
          request.Method = @"POST";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-         request.ContentType = @"application/x-www-form-urlencoded";
+         request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
+         request.ContentType = @"application/json";
+         request.PreAuthenticate = true;
          request.KeepAlive = false;
 
          UploadTicketResponse uploadTicket = null;
          try
          {
             {
-               //Field           Required       Description
-               //type            Yes            Must be set to streaming
-               //upgrade_to_1080 No             If set to true, and you have the ability to create 1080p videos, we will create a 1080p version of your video. Check out the FAQ for more information.
-               IDictionary<string, string> KeyValues = new Dictionary<string, string>
+               var uploadRequest = new UploadRequest()
                {
-                  {"type"     , "streaming" }
+                  upload = new Upload()
+                  {
+                     appraoch = "tus",
+                     size = lFileSize
+                  },
+                  name = strTitle,
+                  //description = strDescription,
+                  privacy = new JSONObjects.Privacy()
+                  {
+                     view = GetPrivacyString( ePrivacy )
+                  }
                };
-               string strQueryParams = GenerateQueryParams(KeyValues);
 
-               var bytesData = Encoding.UTF8.GetBytes(strQueryParams);
+               if( ePrivacy == Privacy.Password )
+               {
+                  //TODO
+               }
+
+               string strBody = Newtonsoft.Json.JsonConvert.SerializeObject( uploadRequest );
+
+               var bytesData = Encoding.UTF8.GetBytes( strBody );
                request.ContentLength = bytesData.Length;
                Stream requestStream = request.GetRequestStream();
                requestStream.Write(bytesData, 0, bytesData.Length);
@@ -360,8 +359,9 @@ namespace VimeoAPI
             responseStream.Close();
             response.Close();
 
-            uploadTicket =
-                 Newtonsoft.Json.JsonConvert.DeserializeObject<UploadTicketResponse>(strResponse);
+            var ticket = Newtonsoft.Json.JsonConvert.DeserializeObject<UploadTicketResponse>( strResponse );
+
+            uploadTicket = ticket;
          }
          catch (WebException wex)
          {
@@ -403,11 +403,12 @@ namespace VimeoAPI
 
             HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
             request.Method = @"PUT";
-            request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-            request.ContentType = @"video/mp4";
+            request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
+            request.ContentType = @"application/offset+octet-stream";
             request.Headers = new WebHeaderCollection()
             {
-               {"Content-Range", string.Format("bytes {0}-{1}/{2}", lStart, lEnd, lFileSize)}
+               { "Tus-Resumable", "1.0.0" },
+               {"Upload-Offset", string.Format("{0}", lStart) }
             };
             request.KeepAlive = false;
 
@@ -450,7 +451,7 @@ namespace VimeoAPI
                }
 
                lStart += lBytes;
-               if (lEnd >= lFileSize)
+               if ( lEnd >= lFileSize )
                {
                   break;
                }
@@ -466,242 +467,9 @@ namespace VimeoAPI
 
          fstream.Close();
 
-         //Verify the upload
-         bool bOK = VerifyUpload(strURL);
-
-         if (bOK)
-         {
-            bOK = CompleteUpload(strCompleteURI);
-         }
-
-         return bOK;
+         return true;
       }
-
-      private bool VerifyUpload(string strURL)
-      {
-         VimeoLogger.Log("Vimeo::VerifyUpload");
-
-         HttpStatusCode status = HttpStatusCode.Unused;
-         {
-            Debug.Assert(!string.IsNullOrWhiteSpace(strURL));
-
-            HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
-            request.Method = @"PUT";
-            request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-            request.Headers = new WebHeaderCollection()
-            {
-               {"Content-Range"  , "bytes */*"}
-            };
-            request.ContentLength = 0;
-            request.KeepAlive = false;
-
-            //Do call
-            HttpWebResponse response = null;
-            try
-            {
-               response = request.GetResponse() as HttpWebResponse;
-               VimeoLogger.Log(response);
-            }
-            catch (WebException ex)
-            {
-               VimeoLogger.Log(ex);
-               //This happens for me.  I think it is because I did an upload and didn't complete the upload
-               response = ex.Response as HttpWebResponse;
-            }
-            status = response.StatusCode;
-            Stream responseStream = response.GetResponseStream();
-            StreamReader r = new StreamReader(responseStream);
-            string strResponse = r.ReadToEnd();
-            VimeoLogger.Log("Vimeo::VerifyUpload; response: " + strResponse);
-            r.Close();
-            responseStream.Close();
-            response.Close();
-         }
-
-         return status == HttpStatusCode.OK 
-            || ((int)status) == 308;//"The remote server return an error: (308) Resume Incomplete."
-      }
-
-      private bool CompleteUpload(string strCompleteUri)
-      {
-         VimeoLogger.Log("Vimeo::CompleteUpload");
-         Debug.Assert(!string.IsNullOrWhiteSpace(strCompleteUri));
-
-         string strURL = BuildURL(strCompleteUri, string.Empty);
-
-         HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
-         request.Headers = new WebHeaderCollection()
-         {
-            {"Authorization", string.Format("bearer {0}", m_strAccessToken)}
-         };
-         request.Method = @"DELETE";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-         request.KeepAlive = false;
-
-         //Do call
-         HttpStatusCode status = HttpStatusCode.OK;
-         try
-         {
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            VimeoLogger.Log(response);
-            status = response.StatusCode;
-
-            string strClipURI = response.Headers["Location"];
-            m_strClipURI = strClipURI;
-            VimeoLogger.Log("Vimeo::CompleteUpload; ClipURI: " + m_strClipURI);
-
-            Stream responseStream = response.GetResponseStream();
-            StreamReader r = new StreamReader(responseStream);
-            string strResponse = r.ReadToEnd();
-            VimeoLogger.Log("Vimeo::CompleteUpload; response: " + strResponse);
-            r.Close();
-            responseStream.Close();
-            response.Close();
-         }
-         catch (WebException wex)
-         {
-            VimeoLogger.Log(wex);
-            m_strErrorMessage = wex.Message;
-            return false;
-         }
-
-         return status == HttpStatusCode.Created;
-      }
-
-      public bool SetVideoInformation(string strClipURI, string strTitle, string strDescription)
-      {
-         VimeoLogger.Log("Vimeo::SetVideoInformation");
-         Debug.Assert( !string.IsNullOrEmpty( strClipURI ) );
-         if ( string.IsNullOrEmpty( strClipURI ) )
-         {
-            VimeoLogger.Log("Vimeo::SetVideoInformation; No Clip URI");
-            return false;
-         }
-
-         string strURL = BuildURL(strClipURI, string.Empty);
-
-         HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
-         request.Headers = new WebHeaderCollection()
-         {
-            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
-         };
-         request.Method = @"PATCH";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-         request.ContentType = @"application/x-www-form-urlencoded";
-         request.KeepAlive = false;
-
-         //Do call
-         HttpStatusCode status = HttpStatusCode.OK;
-         try
-         {
-            {
-               IDictionary<string, string> KeyValues = new Dictionary<string, string>
-               {
-                  {"name"        , strTitle                                      },
-                  {"description" , strDescription                                }
-               };
-               string strQueryParams = GenerateQueryParams(KeyValues);
-
-               VimeoLogger.Log("Vimeo::SetVideoInformation; name: " + strTitle);
-               VimeoLogger.Log("Vimeo::SetVideoInformation; description: " + strDescription);
-
-               var bytesData = Encoding.UTF8.GetBytes(strQueryParams);
-               request.ContentLength = bytesData.Length;
-               Stream requestStream = request.GetRequestStream();
-               requestStream.Write(bytesData, 0, bytesData.Length);
-               requestStream.Close();
-            }
-
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            VimeoLogger.Log(response);
-            Stream responseStream = response.GetResponseStream();
-            StreamReader r = new StreamReader(responseStream);
-            string strResponse = r.ReadToEnd();
-            VimeoLogger.Log("Vimeo::SetVideoInformation; response: " + strResponse);
-            status = response.StatusCode;
-            r.Close();
-            responseStream.Close();
-            response.Close();
-         }
-         catch (WebException wex)
-         {
-            VimeoLogger.Log(wex);
-            return false;
-         }
-
-         return status == HttpStatusCode.OK;
-      }
-
-      public bool SetPrivacyInformation( string strClipURI, Privacy ePrivacy, string strPassword )
-      {
-         VimeoLogger.Log( "Vimeo::SetPrivacyInformation" );
-         Debug.Assert( !string.IsNullOrEmpty( strClipURI ) );
-         if ( string.IsNullOrEmpty( strClipURI ) )
-         {
-            VimeoLogger.Log( "Vimeo::SetPrivacyInformation; No Clip URI" );
-            return false;
-         }
-
-         string strURL = BuildURL( strClipURI, string.Empty );
-
-         HttpWebRequest request = WebRequest.CreateDefault( new Uri( strURL ) ) as HttpWebRequest;
-         request.Headers = new WebHeaderCollection()
-         {
-            {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
-         };
-         request.Method = @"PATCH";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
-         request.ContentType = @"application/x-www-form-urlencoded";
-         request.KeepAlive = false;
-
-         //Do call
-         HttpStatusCode status = HttpStatusCode.OK;
-         try
-         {
-            {
-               IDictionary<string, string> KeyValues = new Dictionary<string, string>
-               {
-                  {"privacy.view", GetPrivacyString(ePrivacy)                    }
-               };
-               if (ePrivacy == Privacy.Password)
-               {
-                  KeyValues.Add(
-                     new KeyValuePair<string, string>("password", strPassword));
-               }
-
-               string strQueryParams = GenerateQueryParams(KeyValues);
-
-               VimeoLogger.Log( "Vimeo::SetPrivacyInformation; privacy.view: " + GetPrivacyString( ePrivacy ) );
-               VimeoLogger.Log( "Vimeo::SetPrivacyInformation; password: " + strPassword );
-
-               var bytesData = Encoding.UTF8.GetBytes( strQueryParams );
-               request.ContentLength = bytesData.Length;
-               Stream requestStream = request.GetRequestStream();
-               requestStream.Write(bytesData, 0, bytesData.Length);
-               requestStream.Close();
-            }
-
-
-            HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            VimeoLogger.Log( response );
-            Stream responseStream = response.GetResponseStream();
-            StreamReader r = new StreamReader(responseStream);
-            string strResponse = r.ReadToEnd();
-            VimeoLogger.Log( "Vimeo::SetPrivacyInformation; response: " + strResponse );
-            status = response.StatusCode;
-            r.Close();
-            responseStream.Close();
-            response.Close();
-         }
-         catch (WebException wex)
-         {
-            VimeoLogger.Log( wex );
-            return false;
-         }
-
-         return status == HttpStatusCode.OK;
-      }
-
+      
       private string GetPrivacyString(Privacy ePrivacy)
       {
          VimeoLogger.Log("Vimeo::GetPrivacyString");
@@ -720,49 +488,60 @@ namespace VimeoAPI
          }
       }
 
-      public bool SetVideoTags(string strClipURI, string strTags)
+
+      public bool SendCaptions( int nVideoID, string strCaptions )
       {
-         VimeoLogger.Log("Vimeo::SetVideoTags");
-         Debug.Assert(!string.IsNullOrEmpty(m_strClipURI));
-         if ( string.IsNullOrEmpty(m_strClipURI))
-         {
-            return false;
-         }
+         VimeoLogger.Log( "Vimeo::SetCaptionData" );
+         //Debug.Assert( !string.IsNullOrEmpty( m_strClipURI ) );
+         //if ( string.IsNullOrEmpty( m_strClipURI ) )
+         //{
+         //   return false;
+         //}
 
-         string strURL = BuildURL( string.Format(Endpoints.ClipTags, strClipURI, strTags), string.Empty);
+         string strURL = BuildURL( string.Format( Endpoints.TextTracks, nVideoID ), string.Empty );
 
-         HttpWebRequest request = WebRequest.CreateDefault(new Uri(strURL)) as HttpWebRequest;
+         HttpWebRequest request = WebRequest.CreateDefault( new Uri( strURL ) ) as HttpWebRequest;
          request.Headers = new WebHeaderCollection()
          {
+            {"video_id", nVideoID.ToString() },
+            {"language", "English" },
+            {"name", "Captions" },
+            {"type", "captions" },
             {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
-         request.Method = @"PUT";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
+         request.Method = @"POST";
+         request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
          request.ContentType = @"application/x-www-form-urlencoded";
          request.KeepAlive = false;
+
+         var bytesData = Encoding.UTF8.GetBytes( strCaptions );
+         request.ContentLength = bytesData.Length;
+         Stream requestStream = request.GetRequestStream();
+         requestStream.Write( bytesData, 0, bytesData.Length );
+         requestStream.Close();
 
          //Do call
          HttpStatusCode status = HttpStatusCode.OK;
          try
          {
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-            VimeoLogger.Log(response);
+            VimeoLogger.Log( response );
             Stream responseStream = response.GetResponseStream();
-            StreamReader r = new StreamReader(responseStream);
+            StreamReader r = new StreamReader( responseStream );
             string strResponse = r.ReadToEnd();
-            VimeoLogger.Log("Vimeo::SetVideoTags; response: " + strResponse);
+            VimeoLogger.Log( "Vimeo::SendCaptions; response: " + strResponse );
             r.Close();
             status = response.StatusCode;
             responseStream.Close();
             response.Close();
          }
-         catch (WebException wex)
+         catch ( WebException wex )
          {
-            VimeoLogger.Log(wex);
+            VimeoLogger.Log( wex );
             return false;
          }
 
-         return status == HttpStatusCode.OK;
+         return status == HttpStatusCode.Created;
       }
 
       public bool LoadAccessToken(string strAccessToken)
@@ -778,7 +557,7 @@ namespace VimeoAPI
             {"Authorization", string.Format("bearer {0}", strAccessToken)}
          };
          request.Method = @"GET";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
+         request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
          request.ContentType = @"application/x-www-form-urlencoded";
          request.KeepAlive = false;
 
@@ -840,7 +619,7 @@ namespace VimeoAPI
             {"Authorization"  , string.Format("bearer {0}", m_strAccessToken) }
          };
          request.Method = @"GET";
-         request.Accept = @"application/vnd.vimeo.*+json; version=3.2";
+         request.Accept = @"application/vnd.vimeo.*+json; version=3.4";
          request.ContentType = @"application/x-www-form-urlencoded";
          request.KeepAlive = false;
 

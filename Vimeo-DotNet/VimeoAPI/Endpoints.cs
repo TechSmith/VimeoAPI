@@ -15,5 +15,6 @@ namespace VimeoAPI
       public const string Categories   = "/categories";
       public const string ClipCategories = "{0}/categories";
       public const string ClipTags     = "{0}/tags/{1}";
+      public const string TextTracks     = "/videos/{0}/texttracks";
    }
 }
