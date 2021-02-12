@@ -11,7 +11,7 @@ nuget
    nuspec
    {
       id = VimeoNative;
-      version: 11.0.0.0;
+      version: 11.1.0.0;
       title: Vimeo Native Library;
       authors: { TechSmith Corporation };
       owners: { TechSmith Corporation };
@@ -24,6 +24,7 @@ nuget
       description: @"A Vimeo library which acts as an interface via interop to the C# Vimeo libraries.
 
 New features:
+    v 11.1.0.0 Updated some functions to take a const wchar_t*s
     v 11.0.0.0 Updated to use Visual Studio 2017
     v 10.0.0.0 Updated to use Visual Studio 2015/.NET 4.6
 Breaking changes:
@@ -32,7 +33,7 @@ Breaking changes:
 Bugfixes:
 Misc:
       ";
-      copyright: "Copyright (c) 2014-2018 TechSmith Corporation. All rights reserved.";
+      copyright: "Copyright (c) 2014 TechSmith Corporation. All rights reserved.";
       tags: { native, tsc, vimeo, utility, vs2017, cpp, dynamicmfc, mfc, dynamiccpp };
    };
 
