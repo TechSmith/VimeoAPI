@@ -21,7 +21,7 @@ public:
    static System::Collections::Generic::IDictionary<int, VimeoAPI::Vimeo^> ^ _GCLibMap = gcnew System::Collections::Generic::Dictionary<int, VimeoAPI::Vimeo^>();
 };
 
-VIMEO_EXTERN int VimeoCreate(VimeoHandle* ppHandle, VimeoString* pstrClientID, VimeoString* pstrClientSecret)
+VIMEO_EXTERN int VimeoCreate(VimeoHandle* ppHandle, const VimeoString* pstrClientID, const VimeoString* pstrClientSecret)
 {
    String ^strClientID     = gcnew String(pstrClientID);
    String ^strClientSecret = gcnew String(pstrClientSecret);
@@ -46,7 +46,7 @@ VIMEO_EXTERN int VimeoFree(VimeoHandle* ppHandle)
    return VIMEO_SUCCESS;
 }
 
-VIMEO_EXTERN int VimeoLoadAccessToken(VimeoHandle pHandle, VimeoString* pstrAuthToken)
+VIMEO_EXTERN int VimeoLoadAccessToken(VimeoHandle pHandle, const VimeoString* pstrAuthToken)
 {
    String ^strAuthToken     = gcnew String(pstrAuthToken);
    VimeoAPI::Vimeo^ pVimeo = GET_LIB(pHandle);
@@ -108,7 +108,7 @@ VIMEO_EXTERN int VimeoGetURL(VimeoHandle pHandle, VimeoString *pstrURL, int& nSi
    return bOK ? VIMEO_SUCCESS : VIMEO_FAILURE_GENERIC;
 }
 
-VIMEO_EXTERN int VimeoIsCallbackURL(VimeoString* pstrURL)
+VIMEO_EXTERN int VimeoIsCallbackURL(const VimeoString* pstrURL)
 {
    String ^strURL     = gcnew String(pstrURL);
    bool bOK = VimeoAPI::Vimeo::StartsWithCallbackURL(strURL);
@@ -167,7 +167,7 @@ inline System::Boolean IVimeoProgressAdapter::GetCanceled()
    return m_pProgress ? m_pProgress->GetCanceled() : false;
 }
 
-VIMEO_EXTERN int VimeoUploadFile(VimeoHandle pHandle, VimeoString* pstrPath, VimeoString* pstrTitle, VimeoString* pstrDescription, VimeoString* pstrTags, int nPrivacy, VimeoString* pstrPassword, IVimeoProgress* pProgress)
+VIMEO_EXTERN int VimeoUploadFile(VimeoHandle pHandle, const VimeoString* pstrPath, const VimeoString* pstrTitle, const VimeoString* pstrDescription, const VimeoString* pstrTags, int nPrivacy, const VimeoString* pstrPassword, IVimeoProgress* pProgress)
 {
    String ^strPath         = gcnew String(pstrPath);
    String ^strTitle        = gcnew String(pstrTitle);
